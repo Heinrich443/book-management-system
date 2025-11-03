@@ -57,8 +57,9 @@ public class BookServiceTest {
 
     @Test
     public void testGetPage1() {
-        int currentPage = 1, pageSize = 5;
-        List<Book> books = service.getPage(currentPage, pageSize);
+        int currentPage = 2, pageSize = 5;
+        Page<Book> page = service.getPage(currentPage, pageSize);
+        List<Book> books = page.getRecords();
         for (Book book: books) {
             System.out.println(book);
         }
@@ -68,15 +69,11 @@ public class BookServiceTest {
     public void testGetPage2() {
         Book book1 = new Book();
         book1.setName("java");
-        book1.setDescription("spring");
-        List<Book> books = service.getPage(book1);
-        for (Book book: books) {
+        int currentPage = 2, pageSize = 3;
+        Page<Book> page = service.getPage(currentPage, pageSize, book1);
+        List<Book> books = page.getRecords();
+        for (Book book : books) {
             System.out.println(book);
         }
-    }
-
-    @Test
-    public void testGetPage3() {
-
     }
 }

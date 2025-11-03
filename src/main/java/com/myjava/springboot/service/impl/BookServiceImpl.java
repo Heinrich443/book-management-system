@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.myjava.springboot.dao.BookDao;
 import com.myjava.springboot.pojo.Book;
 import com.myjava.springboot.service.BookService;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,29 +43,20 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getPage(int currentPage, int pageSize) {
+    public Page<Book> getPage(int currentPage, int pageSize) {
         Page<Book> page = new Page<>(currentPage, pageSize);
-        return bookDao.selectList(page, null);
+        bookDao.selectPage(page, null);
+        return page;
     }
 
     @Override
-    public List<Book> getPage(Book book) {
-        LambdaQueryWrapper<Book> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(book.getId() != null, Book::getId, book.getId())
-                .like(book.getType() != null, Book::getType, book.getType())
-                .like(book.getName() != null, Book::getName, book.getName())
-                .like(book.getDescription() != null, Book::getDescription, book.getDescription());
-        return bookDao.selectList(lqw);
-    }
-
-    @Override
-    public List<Book> getPage(int currentPage, int pageSize, Book book) {
+    public Page<Book> getPage(int currentPage, int pageSize, Book book) {
         Page<Book> page = new Page<>(currentPage, pageSize);
         LambdaQueryWrapper<Book> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(book.getId() != null, Book::getId, book.getId())
-                .like(book.getType() != null, Book::getType, book.getType())
-                .like(book.getName() != null, Book::getName, book.getName())
-                .like(book.getDescription() != null, Book::getDescription, book.getDescription());
-        return bookDao.selectList(page, lqw);
+        lqw.like(Strings.isNotEmpty(book.getType()), Book::getType, book.getType());
+        lqw.like(Strings.isNotEmpty(book.getName()), Book::getName, book.getName());
+        lqw.like(Strings.isNotEmpty(book.getDescription()), Book::getDescription, book.getDescription());
+        bookDao.selectPage(page, lqw);
+        return page;
     }
 }

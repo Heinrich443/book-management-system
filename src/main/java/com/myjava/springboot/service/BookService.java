@@ -36,15 +36,10 @@ public interface BookService {
     /**
      * 分页查询
      */
-    List<Book> getPage(int cucrrentPage, int pageSize);
-
-    /**
-     * 条件查询
-     */
-    List<Book> getPage(Book book);
+    Page<Book> getPage(int cucrrentPage, int pageSize);
 
     /**
      * 条件查询+分页
      */
-    List<Book> getPage(int currentPage, int pageSize, Book book);
+    Page<Book> getPage(int currentPage, int pageSize, Book book);
 }
